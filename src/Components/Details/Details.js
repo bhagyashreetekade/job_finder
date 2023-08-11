@@ -9,7 +9,7 @@ const Details = () => {
 
   return (
     <div className="flex justify-center items-center ">
-      <div className="flex flex-col justify-start mx-96 w-full h-full p-6 items-start bg-[#f5f8f1] space-y-3">
+      <div className="flex flex-col justify-start md:mx-96  w-full h-full p-6 items-start bg-[#f5f8f1] space-y-3">
      
        <h1 className="text-xl font-bold">{job.employer_name}</h1>
        
@@ -18,7 +18,7 @@ const Details = () => {
           <BiHomeAlt className="text-lg" />
           <h1 className="text-sm ">{job.job_employment_type}</h1>
         </div>
-        <div className="grid gap-14 grid-cols-3">
+        <div className="lg:grid lg:gap-14 lg:grid-cols-3 flex flex-col">
           <h1 className="text-gray-400 text-left">
             SALARY <br />
             <span className="text-black group-hover:text-white">
