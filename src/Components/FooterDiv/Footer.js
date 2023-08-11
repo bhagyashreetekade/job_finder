@@ -60,7 +60,7 @@ const Footer = () => {
       <div className='grid gap-3'>
         <span className='font-semibold pb-[1.5rem] text-[18px]'>Contact Info</span>
         <div className="text-[14px] text-white" >
-        <small>teb016335@gmail.com</small>
+        <a href="https://github.com/bhagyashreetekade" target="_blank" >Made By Bhagyashree Tekade</a>
         <div className="icons flex gap-4 py-[1rem] ">
           <AiFillInstagram className="h-[35px] w-[35px] p-[8px] rounded-full text-blue-700 bg-white"/>
           <BsFacebook className="h-[35px] w-[35px] rounded-full text-blue-700 p-[8px] bg-white"/>
