@@ -1,86 +1,91 @@
-import React from 'react'
+import React from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 
-//Imported Icons =================>
-import {BiTimeFive} from 'react-icons/bi'
+const Jobs = (props) => {
 
-//Imported Images =================>
-import logo1 from '../../Assets/logo1.png'
-import logo2 from '../../Assets/logo2.png'
-import logo3 from '../../Assets/logo3.png'
-//For all the jos, we are going to use high order array method called Map...
-//In this case we shall list all the jobs into an array called Data...
+  console.log(props)
+  const [data, setData] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async (job) => {
+      const options = {
+        method: "GET",
+        url: "https://jsearch.p.rapidapi.com/search",
+        params: {
+          query: job || "cyber",
+          page: "2",
+          num_pages: "1",
+        },
+        headers: {
+          "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+          "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
+        },
+      };
 
-const Data =[
-  {
-    id:1,
-    image:logo1,
-    title:'Web Developer ',
-    time: 'Now',
-    location: 'Canada',
-    desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique, ducimus.',
-    company: 'Huawei Co.'
-
-  },
-  {
-    id:2,
-    image:logo2,
-    title:'UI/UX Developer ',
-    time: 'Now',
-    location: 'India',
-    desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique, ducimus.',
-    company: 'Amazon Co.'
-
-  },
-  {
-    id:3,
-    image:logo3,
-    title:'IOT Developer ',
-    time: 'Now',
-    location: 'India',
-    desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique, ducimus.',
-    company: 'Nmedia Co.'
-
-  }
-]
-
-//This is single company, lets see how to map it...
-const Jobs = () => {
-  return (
-    <div className='jobContainer flex gap-10 justify-center items-center flex-wrap py-10'>
-      {
-        Data.map(({id,image,title,time,location,desc,company})=>{
-          return (
-
-            //This will return a single job post based on the ID
-            <div key={id} className="group group/item singleJob text-left bg-white p-[20px] rounded-[10px] hover:bg-blue-700 shadow-lg shadow-gray-500 w-[250px] hover:shadow-xl ">
-              <span className='flex justify-between items-center gap-4'>
-                <h1 className='text-lg text-gray-700 font-semibold group-hover:text-white cursor-pointer'>{title}</h1>
-                <span className='flex gap-1 items-center text-gray-300'>
-                  <BiTimeFive className='cursor-pointer '/>{time}
-                </span>
-              </span>
-
-              <h6 className='text-gray-300'>{location}</h6>
-              <p className='text-sm text-[#95959] pt-[20px] border-t-[2px] mt-[20px] group-hover:text-white'>{desc}</p>
-
-              <div className='company flex items-center gap-3 mt-3' >
-                <img src={image} className='h-7' alt="" />
-                <span className='text-[14px] py-[1rem block group-hover:text-white font-semibold'>{company}</span>
-              </div>
-
-              <button className='border-[2px] rounded-[10px] mt-3 p-[10px] w-full text-[14px] font-semibold hover:bg-white text-bl group-hover:bg-white'>
-                Apply Now
-              </button>
-
-            </div>
-          )
-        })
+      try {
+        const response = await axios.request(options);
+        setData(response.data.data);
+        console.log(response.data.data); // Log the fetched data
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
+    };
+
+    fetchData(props.data); // Fetch data when the 'data' prop changes
+  }, [props.data]);
+
+  return (
+    <div className="jobContainer flex gap-10 justify-center items-center flex-wrap py-10 ">
+      {/* This will return a single job post based on the ID */}
+      {data.map((job, index) => (
+        <div
+          key={index}
+          className="group hover:cursor-pointer hover:bg-blue-800 h-72 w-60 flex flex-col p-5 text-left shadow-md shadow-gray-500 rounded-md space-y-2"
+        >
+          <div className="logo flex flex-row justify-between">
+            <h1 className="text-lg font-semibold group-hover:text-white ">
+              {job.employer_name}
+            </h1>
+            {job.employer_logo && (
+              <img className="h-10 w-10" src={job.employer_logo} alt="" />
+            )}
+          </div>
+          <h1 className="group-hover:text-white font-semibold text-black">
+            {" "}
+            {job.job_job_title}
+          </h1>
+          <h1 className="text-gray-400 ">
+            Salary
+            <br />
+            <span className="text-black group-hover:text-white">
+              {job.job_max_salary
+                ? parseFloat(job.job_max_salary).toFixed(3)
+                : "Yet to be disclosed"}
+            </span>
+          </h1>
+          <h1 className="text-gray-400">
+            Location
+            <br />
+            <span className="text-black group-hover:text-white">
+              {job.job_city}, {job.job_country}
+            </span>
+          </h1>
+          <div className="flex flex-grow justify-end items-end  " >
+          {/* Flex-grow to push the button to the bottom */}
+          <button
+           
+            className="rounded-lg w-fit p-2 shadow-md text-[14px] font-semibold hover:bg-white group-hover:bg-white text-center"
+          >
+            {/* to send the whole data we encode the data into a single string and then decode it back in the Details component: */}
+            <NavLink to={`/details/${encodeURIComponent(JSON.stringify(job))}`}>View Details</NavLink>
+          </button>
+          </div>
+        </div>
+      ))}
     </div>
+  );
+};
 
-  )
-}
-
-export default Jobs
- 
+export default Jobs;
